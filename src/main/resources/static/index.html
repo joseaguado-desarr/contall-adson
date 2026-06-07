@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contall Inventario</title>
+    <style>
+        body { font-family: Inter, Arial, sans-serif; background: #eef2f6; margin: 0; padding: 0; color: #1f2937; }
+        .page { max-width: 900px; margin: 50px auto; background: #ffffff; padding: 32px; border-radius: 16px; box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08); }
+        h1 { margin-top: 0; color: #0f172a; }
+        p { line-height: 1.7; }
+        .card { margin: 20px 0; padding: 20px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; }
+        code { background: #e2e8f0; padding: 3px 6px; border-radius: 6px; }
+        ul { margin: 16px 0; padding-left: 24px; }
+        li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>Contall Inventario</h1>
+        <p>App de registro de inventario para almacén de ventas.</p>
+        <div class="card">
+            <h2>Credenciales de administrador</h2>
+            <p><strong>Usuario:</strong> <code>aguadojose20@gmail.ocm</code></p>
+            <p><strong>Clave:</strong> <code>132828</code></p>
+        </div>
+        <div class="card">
+            <h2>API disponibles</h2>
+            <ul>
+                <li><code>POST /api/auth/login</code> — iniciar sesión</li>
+                <li><code>GET /api/products</code> — listar inventario</li>
+                <li><code>GET /api/products/{id}</code> — obtener producto</li>
+                <li><code>POST /api/products</code> — crear producto</li>
+                <li><code>PUT /api/products/{id}</code> — actualizar producto</li>
+                <li><code>DELETE /api/products/{id}</code> — eliminar producto</li>
+            </ul>
+        </div>
+        <p>Para inspeccionar la base de datos, abre:</p>
+        <ul>
+            <li><code>http://localhost:8080/h2-console</code></li>
+        </ul>
+        <p>La app protege la API con autenticación básica. Usa las credenciales de administrador para acceder a los endpoints seguros.</p>
+    </div>
+</body>
+</html>
