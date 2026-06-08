@@ -6,40 +6,127 @@
     <title>Contall Inventario</title>
     <style>
         body { font-family: Inter, Arial, sans-serif; background: #eef2f6; margin: 0; padding: 0; color: #1f2937; }
-        .page { max-width: 900px; margin: 50px auto; background: #ffffff; padding: 32px; border-radius: 16px; box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08); }
-        h1 { margin-top: 0; color: #0f172a; }
-        p { line-height: 1.7; }
-        .card { margin: 20px 0; padding: 20px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; }
-        code { background: #e2e8f0; padding: 3px 6px; border-radius: 6px; }
-        ul { margin: 16px 0; padding-left: 24px; }
-        li { margin-bottom: 8px; }
+        .page { max-width: 1024px; margin: 24px auto; background: #ffffff; padding: 28px; border-radius: 20px; box-shadow: 0 24px 72px rgba(15, 23, 42, 0.12); }
+        h1, h2 { margin: 0 0 16px; color: #0f172a; }
+        p { line-height: 1.75; margin: 0 0 16px; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+        .topbar .info { color: #475569; }
+        .card { margin: 20px 0; padding: 24px; border-radius: 18px; background: #f8fafc; border: 1px solid #e2e8f0; }
+        .grid { display: grid; gap: 20px; }
+        .grid-2 { grid-template-columns: 1fr 1fr; }
+        .form-group { display: grid; gap: 10px; margin-bottom: 16px; }
+        label { font-weight: 600; color: #334155; }
+        input, textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px 14px; background: #ffffff; color: #0f172a; font-size: 1rem; }
+        textarea { resize: vertical; min-height: 80px; }
+        button { cursor: pointer; border: none; border-radius: 12px; padding: 12px 18px; font-weight: 700; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+        button:hover { transform: translateY(-1px); }
+        button.primary { background: #2563eb; color: #ffffff; box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18); }
+        button.secondary { background: #e2e8f0; color: #0f172a; }
+        button.danger { background: #ef4444; color: #ffffff; }
+        button.small { padding: 8px 12px; border-radius: 10px; font-size: 0.95rem; }
+        .message { display: none; padding: 14px 16px; border-radius: 12px; margin-bottom: 20px; font-weight: 600; }
+        .message.info { background: #e2e8f0; color: #0f172a; }
+        .message.success { background: #d1fae5; color: #065f46; }
+        .message.error { background: #fee2e2; color: #991b1b; }
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th, td { text-align: left; padding: 14px 12px; border-bottom: 1px solid #e2e8f0; }
+        th { color: #334155; font-weight: 700; }
+        td.actions { display: flex; gap: 8px; }
+        .note { background: #eef2ff; color: #1e3a8a; padding: 16px; border-radius: 14px; border: 1px solid #bfdbfe; margin-top: 12px; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } td.actions { flex-direction: column; align-items: stretch; } }
     </style>
 </head>
 <body>
     <div class="page">
-        <h1>Contall Inventario</h1>
-        <p>App de registro de inventario para almacén de ventas.</p>
-        <div class="card">
-            <h2>Credenciales de administrador</h2>
-            <p><strong>Usuario:</strong> <code>aguadojose20@gmail.ocm</code></p>
-            <p><strong>Clave:</strong> <code>132828</code></p>
+        <div class="topbar">
+            <div>
+                <h1>Contall Inventario</h1>
+                <p class="info">Interfaz para gestionar productos del backend Spring Boot.</p>
+            </div>
+            <button id="logout-button" class="secondary" style="display:none;">Cerrar sesión</button>
         </div>
-        <div class="card">
-            <h2>API disponibles</h2>
-            <ul>
-                <li><code>POST /api/auth/login</code> — iniciar sesión</li>
-                <li><code>GET /api/products</code> — listar inventario</li>
-                <li><code>GET /api/products/{id}</code> — obtener producto</li>
-                <li><code>POST /api/products</code> — crear producto</li>
-                <li><code>PUT /api/products/{id}</code> — actualizar producto</li>
-                <li><code>DELETE /api/products/{id}</code> — eliminar producto</li>
-            </ul>
-        </div>
-        <p>Para inspeccionar la base de datos, abre:</p>
-        <ul>
-            <li><code>http://localhost:8080/h2-console</code></li>
-        </ul>
-        <p>La app protege la API con autenticación básica. Usa las credenciales de administrador para acceder a los endpoints seguros.</p>
+
+        <div id="message" class="message"></div>
+
+        <section id="login-section" class="card">
+            <h2>Iniciar sesión</h2>
+            <p>Accede usando las credenciales de administrador.</p>
+            <form id="login-form" class="grid grid-2">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input id="username" name="username" type="text" placeholder="Correo o usuario" autocomplete="username" required />
+                </div>
+                <div class="form-group">
+                    <label for="password">Clave</label>
+                    <input id="password" name="password" type="password" placeholder="Clave" autocomplete="current-password" required />
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <button type="submit" class="primary">Iniciar sesión</button>
+                </div>
+            </form>
+            <div class="note">
+                <strong>Credenciales:</strong> <code>aguadojose20@gmail.com</code> / <code>132828</code>
+            </div>
+        </section>
+
+        <section id="inventory-section" class="card" style="display:none;">
+            <h2>Gestión de productos</h2>
+            <p>Consulta, crea, edita y elimina productos desde esta interfaz.</p>
+
+            <form id="product-form" class="grid grid-2">
+                <div class="form-group">
+                    <label for="sku">SKU</label>
+                    <input id="sku" name="sku" type="text" placeholder="Código de referencia" required />
+                </div>
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input id="name" name="name" type="text" placeholder="Nombre del producto" required />
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" name="description" placeholder="Descripción del producto"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Cantidad</label>
+                    <input id="quantity" name="quantity" type="number" min="0" placeholder="0" required />
+                </div>
+                <div class="form-group">
+                    <label for="price">Precio</label>
+                    <input id="price" name="price" type="number" min="0" step="0.01" placeholder="0.00" required />
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                    <div>
+                        <h3 id="form-title" style="margin:0 0 8px; font-size:1rem;">Agregar nuevo producto</h3>
+                        <p style="margin:0; color:#475569;">Completa los datos y presiona guardar.</p>
+                    </div>
+                    <div style="margin-left:auto; display:flex; gap:10px; flex-wrap:wrap;">
+                        <button id="submit-button" type="submit" class="primary">Guardar producto</button>
+                        <button id="cancel-edit" type="button" class="secondary">Cancelar</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="card" style="margin-top:24px; padding:20px;">
+                <h3>Inventario</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>SKU</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-body">
+                        <tr><td colspan="7">Cargando productos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
+    <script src="/app.js"></script>
 </body>
 </html>
