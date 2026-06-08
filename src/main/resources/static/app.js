@@ -103,9 +103,34 @@ async function loadProducts() {
     try {
         const response = await fetchWithAuth(`${API_BASE}/products`);
         const products = await response.json();
+        renderDashboard(products);
         renderProducts(products);
     } catch (err) {
         console.error(err);
+    }
+}
+
+function renderDashboard(products) {
+    const totalProducts = products.length;
+    const totalStock = products.reduce((sum, product) => sum + (Number(product.quantity) || 0), 0);
+    const totalValue = products.reduce((sum, product) => sum + ((Number(product.quantity) || 0) * (Number(product.price) || 0)), 0);
+    const lowStock = products.filter(product => Number(product.quantity) < 5);
+
+    document.getElementById('total-products').textContent = totalProducts;
+    document.getElementById('total-stock').textContent = totalStock;
+    document.getElementById('total-value').textContent = `$${totalValue.toFixed(2)}`;
+
+    const lowStockList = document.getElementById('low-stock-list');
+    lowStockList.innerHTML = '';
+    if (lowStock.length === 0) {
+        lowStockList.innerHTML = '<li>No hay productos con stock bajo.</li>';
+    } else {
+        lowStock.sort((a, b) => (Number(a.quantity) || 0) - (Number(b.quantity) || 0));
+        lowStock.forEach(product => {
+            const li = document.createElement('li');
+            li.textContent = `${product.name} (SKU: ${product.sku}) — ${product.quantity} unidades`; 
+            lowStockList.appendChild(li);
+        });
     }
 }
 
